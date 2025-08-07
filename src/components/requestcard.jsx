@@ -4,10 +4,9 @@ import ActiveRequestModal from './activerequestmodal.jsx'
 
 const Requestcard = ({ bloodGroup, units, date }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const requestData = {
     bloodType: 'B+',
     units: 20,

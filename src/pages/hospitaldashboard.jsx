@@ -1,22 +1,47 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import Navbar2 from '../components/navbar2.jsx'
 import RequestCard from '../components/requestcard.jsx'
 import HospitalRequestCard from '../components/hospitalrequestcard.jsx'
 import PastRequestCard from '../components/pastrequestcard.jsx'
 import Footers from '../components/footers.jsx'
 import MakeRequestModal from '../components/makerequestmodal.jsx'
+import { BACKEND_URL } from '../config.js';
 
 const Hospitaldashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeRequests, setActiveRequests] = useState([]);
+  const [otherRequests, setOtherRequests] = useState([]);
+  const [pastRequests, setPastRequests] = useState([]);
+
+  const token = localStorage.getItem('token');
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const activeRequests = [
-    { bloodGroup: 'B+', units: '20 Units', date: '01-08-2025' },
-    { bloodGroup: 'O-', units: '15 Units', date: '03-08-2025' },
-    { bloodGroup: 'A+', units: '10 Units', date: '02-08-2025' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const [activeRes, othersRes, historyRes] = await Promise.all([
+          fetch(`${BACKEND_URL}/hospital/requests`, { headers }),
+          fetch(`${BACKEND_URL}/hospital/others`, { headers }),
+          fetch(`${BACKEND_URL}/hospital/history`, { headers }),
+        ]);
+
+        const activeData = await activeRes.json();
+        const othersData = await othersRes.json();
+        const historyData = await historyRes.json();
+        setActiveRequests(activeData || []);
+        setOtherRequests(othersData || []);
+        setPastRequests(historyData || []);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+      }
+    };
+
+    fetchData();
+  }, [token]);
 
   return (
     <>
@@ -31,14 +56,16 @@ const Hospitaldashboard = () => {
             <h2 className="text-2xl font-bold text-blue-900 mb-4">Active Requests</h2>
             <div className="grid grid-cols-2 gap-4">
               {/* Active Request Card 1 */}
-              {activeRequests.map((req, index) => (
-                <RequestCard
-                  key={index}
-                  bloodGroup={req.bloodGroup}
-                  units={req.units}
-                  date={req.date}
-                />
-              ))}
+              {activeRequests
+                .filter(req => req && req.requiredbloodtype && req.unitsrequired && req.creationdate)
+                .map((req, index) => (
+                  <RequestCard
+                    key={req.id || index}
+                    bloodGroup={req.requiredbloodtype}
+                    units={`${req.unitsrequired} Units`}
+                    date={new Date(req.creationdate).toLocaleDateString()}
+                  />
+                ))}
 
               {/* New Request Card */}
               <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex flex-col items-center justify-center text-center h-full min-h-[120px]">
@@ -56,10 +83,16 @@ const Hospitaldashboard = () => {
           <div>
             <h2 className="text-2xl font-bold text-blue-900 mb-4">Hospital Requests</h2>
             <div className="space-y-4">
-              {/* Hospital Request Card 1 */}
-              <HospitalRequestCard hospitalName="Apollo Hospital" units="20 Units B+" date="01-08-2025" />
-              {/* Hospital Request Card 2 */}
-              <HospitalRequestCard hospitalName="Apollo Hospital" units="20 Units B+" date="01-08-2025" />
+              {otherRequests
+                .filter(req => req && req.hospitalname && req.units && req.bloodtype && req.creationdate)
+                .map((req, index) => (
+                  <HospitalRequestCard
+                    key={req.id || index}
+                    hospitalName={req.hospitalname}
+                    units={`${req.units} Units ${req.bloodtype}`}
+                    date={new Date(req.creationdate).toLocaleDateString()}
+                  />
+                ))}
 
               {/* Load More Button */}
               <div className="flex justify-center">
@@ -90,7 +123,15 @@ const Hospitaldashboard = () => {
         <h2 className="text-2xl font-bold text-blue-900 mt-8 mb-4">Past Request</h2>
         <div className="space-y-4">
           {/* Past Request Card */}
-          <PastRequestCard units="20 Units B+" date="01-08-2025" />
+          {pastRequests
+            .filter(req => req && req.units && req.bloodtype && req.creationdate)
+            .map((req, index) => (
+              <PastRequestCard
+                key={index}
+                units={`${req.units} Units ${req.bloodtype}`}
+                date={new Date(req.creationdate).toLocaleDateString()}
+              />
+            ))}
         </div>
       </div>
       <Footers />

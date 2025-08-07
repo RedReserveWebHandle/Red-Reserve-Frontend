@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../config.js';
 
 const Profileform = () => {
   const navigate = useNavigate();
+  const [message, setMessage] = useState('');
 
   // Form state
   const [form, setForm] = useState({
@@ -25,9 +26,13 @@ const Profileform = () => {
   };
 
   const handleSubmit = async () => {
+    if(Object.values(form).some(field => field === '')){
+      setMessage("Please fill all fields");
+      return;
+    }
     const token = localStorage.getItem('token');
     if (!token) {
-      alert("Not authenticated");
+      setMessage("Not authenticated");
       return;
     }
 
@@ -44,14 +49,14 @@ const Profileform = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Profile saved successfully!");
+        setMessage("Profile saved successfully!");
         navigate('/donordashboard');
       } else {
-        alert(data.message || "Error saving profile");
+        setMessage(data.message || "Error saving profile");
       }
     } catch (err) {
       console.error("Error:", err);
-      alert("Something went wrong");
+      setMessage("Something went wrong");
     }
   };
 
@@ -89,14 +94,15 @@ const Profileform = () => {
         <SelectInput label="Gender" name="gender" options={genderOptions} value={form.gender} onChange={handleChange} />
         <FormInput label="Age" placeholder="Age" type="number" name="age" value={form.age} onChange={handleChange} />
         <SelectInput label="Blood Group" name="bloodgroup" options={bloodGroupOptions} value={form.bloodgroup} onChange={handleChange} />
-      </div>
-      
+      </div>  
+        {message && <p className="text-red-500">{message.split('[')[0]}</p>}    
       <button
         onClick={handleSubmit}
         className="mt-8 w-full bg-[#1AB6CA] text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors"
       >
         Continue
       </button>
+      
     </div>
   );
 };

@@ -57,7 +57,7 @@ const Landing = () => {
             Your 15 minutes can give someone 15 more years. You don't need to be a doctor to save a life.
           </p>
           <div className="flex space-x-4 mb-8 justify-center">
-            <Link to="/signup" className="flex items-center rounded-lg bg-[#1AB6CA] px-6 py-3 text-xl font-semibold text-white transition duration-300 hover:bg-teal-600 shadow-md">
+            <Link to="/donorsignup" className="flex items-center rounded-lg bg-[#1AB6CA] px-6 py-3 text-xl font-semibold text-white transition duration-300 hover:bg-teal-600 shadow-md">
               <button className="flex flex-row">
                 Donate Now <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14 14H34M34 14V34M34 14L14 34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

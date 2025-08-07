@@ -1,8 +1,63 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DonorAcceptModal from './donoracceptmodal.jsx'; // Capitalized the file name
+import { BACKEND_URL } from '../config.js'; // Ensure this points to your API base
 
-const DashboardLeft = () => { // Capitalized component name
+const DashboardLeft = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [matchingRequests, setMatchingRequests] = useState([]);
+  const [cooldownDate, setCooldownDate] = useState('');
+  const [lastDonation, setLastDonation] = useState(null);
+
+  const fetchMatchingRequests = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/requests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setMatchingRequests(data);
+      } else {
+        console.error('Error fetching requests');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const fetchCooldownAndDonation = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const [cooldownRes, donationRes] = await Promise.all([
+        fetch(`${BACKEND_URL}/cooldown`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${BACKEND_URL}/lastdonation`, { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+
+      if (cooldownRes.ok) {
+        const cd = await cooldownRes.json();
+        setCooldownDate(cd.cooldown?.slice(0, 10)); // Format to YYYY-MM-DD
+      }
+
+      if (donationRes.ok) {
+        const ld = await donationRes.json();
+        setLastDonation(ld.lastdonation?.slice(0, 10));
+      }
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchMatchingRequests();
+    fetchCooldownAndDonation();
+  }, []);
 
   const sampleData = {
     requiredBloodType: 'B+',
@@ -15,8 +70,6 @@ const DashboardLeft = () => { // Capitalized component name
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-
-  const cooldownDate = "01-10-2025"; // Example date
 
   return (
     <>
@@ -32,7 +85,7 @@ const DashboardLeft = () => { // Capitalized component name
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-6 h-6 text-[#1ab6ca]"
+            className="w-6 h-6 text-white"
           >
             <path
               fillRule="evenodd"
@@ -40,11 +93,11 @@ const DashboardLeft = () => { // Capitalized component name
               clipRule="evenodd"
             />
           </svg>
-          <p className="font-semibold">You are in cooldown period till <span className="font-bold">[{cooldownDate}]</span></p>
+          {cooldownDate ? <p className="font-semibold">You are in cooldown period till <span className="font-bold">[{cooldownDate}]</span></p> : <p className="font-semibold">You are eligible to donate!</p>}
         </div>
 
         {/* Last Donation Section */}
-        <h2 className="text-2xl font-bold text-blue-900 mb-4">Last Donation</h2>
+        <h2 className="text-2xl font-bold text-blue-900 mb-4"><span>{lastDonation || 'No donation record'}</span></h2>
         <div className="bg-[#dbedf0] rounded-xl p-4 flex items-center justify-between mb-8 shadow-md">
           <span className="text-[#1ab6ca] font-semibold">Apollo Hospitals</span>
           <div className="flex items-center space-x-2 text-[#1ab6ca]">
@@ -68,12 +121,17 @@ const DashboardLeft = () => { // Capitalized component name
         {/* Matching Nearby Requests Section */}
         <h2 className="text-2xl font-bold text-blue-900 mb-4">Matching Nearby Requests</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Request Card 1 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
-          {/* Request Card 2 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
-          {/* Request Card 3 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
+          {/* Matching Requests */}
+          {matchingRequests.map((req, idx) => (
+            <RequestCard
+              key={idx}
+              bloodGroup={req.requiredbloodtype}
+              hospital={req.hospitalname}
+              eligible={req.eligiblebloodtypes.join(', ')}
+              units={`${req.unitsrequired} units`}
+              openModal={openModal}
+            />
+          ))}
         </div>
 
         {/* More Button */}
