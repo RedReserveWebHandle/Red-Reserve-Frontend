@@ -1,13 +1,13 @@
-import React,{useState} from 'react'
+import {useState} from 'react'
 
-const donoracceptmodal = ({isOpen,onClose}) => {
-   if (!isOpen) {
-    return null;
-  }
-
+const Donoracceptmodal = ({isOpen,onClose}) => {
   // State for the textarea input
   const [medications, setMedications] = useState('');
 
+   if (!isOpen) {
+    return null;
+  }
+  
   // Handler for the "Accept Request" button click
   const handleAcceptRequest = () => {
     console.log('Request accepted!');
@@ -86,4 +86,4 @@ const donoracceptmodal = ({isOpen,onClose}) => {
   )
 }
 
-export default donoracceptmodal
+export default Donoracceptmodal

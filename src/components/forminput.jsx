@@ -1,6 +1,4 @@
-import React from 'react'
-
-const forminput = ({ label, placeholder="", type = "text" }) => {
+const Forminput = ({ label, placeholder="", type = "text" }) => {
   return (
    
     <div className="mb-2">
@@ -17,4 +15,4 @@ const forminput = ({ label, placeholder="", type = "text" }) => {
   )
 }
 
-export default forminput
+export default Forminput

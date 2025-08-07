@@ -1,7 +1,4 @@
-import React,{ useState } from 'react'
-
-
-const hospitalrequestmodal = ({ isOpen, onClose, hospitalData }) => {
+const HospitalRequestModal = ({ isOpen, onClose, hospitalData }) => {
   if (!isOpen) return null;
 
   // Provide default hospitalData if not passed or is null/undefined
@@ -66,4 +63,4 @@ const hospitalrequestmodal = ({ isOpen, onClose, hospitalData }) => {
   )
 }
 
-export default hospitalrequestmodal
+export default HospitalRequestModal

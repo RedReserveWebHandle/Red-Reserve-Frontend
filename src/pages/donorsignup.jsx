@@ -6,7 +6,7 @@ import photo from '../photos/photo2.png'
 import LeftSide from '../components/leftside.jsx'
 
 
-const donorsignup = () => {
+const Donorsignup = () => {
   return (
     <>
     
@@ -20,4 +20,4 @@ const donorsignup = () => {
   )
 }
 
-export default donorsignup
+export default Donorsignup

@@ -1,9 +1,9 @@
-import React,{useState} from 'react'
+import {useState} from 'react'
 import HospitalRequestModal from './hospitalrequestmodal.jsx'
 
-const hospitalrequestcard = ({ hospitalName, units, date }) => {
+const Hospitalrequestcard = ({ hospitalName, units, date }) => {
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
-
+  
   const sampleHospitalData = {
     name: 'HOSPITAL NAME',
     requiredBloodType: 'B+',
@@ -49,4 +49,4 @@ const hospitalrequestcard = ({ hospitalName, units, date }) => {
   )
 }
 
-export default hospitalrequestcard
+export default Hospitalrequestcard

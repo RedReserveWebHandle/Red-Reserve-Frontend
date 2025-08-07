@@ -1,9 +1,7 @@
-import React from 'react'
 import FormInput from './forminput.jsx'
 import SelectInput from './selectinput.jsx'
 
-
-const profileform = () => {
+const Profileform = () => {
     const genderOptions = [
     { value: 'male', label: 'Male' },
     { value: 'female', label: 'Female' },
@@ -47,4 +45,4 @@ const profileform = () => {
   )
 }
 
-export default profileform
+export default Profileform

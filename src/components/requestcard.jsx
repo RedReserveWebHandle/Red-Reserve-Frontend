@@ -1,14 +1,24 @@
-import React from 'react'
 import { useState } from 'react';
 import ActiveRequestModal from './activerequestmodal.jsx'
 
 
-const requestcard = ({ bloodGroup, units, date }) => {
+const Requestcard = ({ bloodGroup, units, date }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const requestData = {
+    bloodType: 'B+',
+    units: 20,
+    responses: [
+      { name: 'SAMARTH', contact: '9833649203', bloodType: 'B+' },
+      { name: 'SAMARTH', contact: '9833649203', bloodType: 'B+' },
+      { name: 'SAMARTH', contact: '9833649203', bloodType: 'B+' },
+      { name: 'SAMARTH', contact: '9833649203', bloodType: 'B+' },
+      { name: 'SAMARTH', contact: '9833649203', bloodType: 'B+' },
+    ],
+  };
 
   return (
     <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex flex-col items-start text-left">
@@ -33,10 +43,10 @@ const requestcard = ({ bloodGroup, units, date }) => {
       <button onClick={openModal} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out self-end">
         Details
       </button>
-      <ActiveRequestModal isOpen={isModalOpen} onClose={closeModal} />
+      <ActiveRequestModal isOpen={isModalOpen} onClose={closeModal} requestData={requestData}/>
       
     </div>
   )
 }
 
-export default requestcard
+export default Requestcard

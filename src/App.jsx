@@ -9,29 +9,22 @@ import DonorDashboard from './pages/donordashboard.jsx'
 import HospitalSignup from './pages/hospitalsignup.jsx'
 import HospitalDashboard from './pages/hospitaldashboard.jsx'
 
-
-
-
-
-
 function App() {
-  
-
   return (
     <>
-   <Router>
-    <Routes>
-      <Route path="/" element={<Landing />}/>
-      <Route path="/login" element={<Login />}/>
-      <Route path="/donorsignup" element={<DonorSignup />}/>
-      <Route path="/setprofile" element={<SetProfile />}/>
-      <Route path="/donordashboard" element={<DonorDashboard />}/>
-      <Route path="/hospitalsignup" element={<HospitalSignup />}/>
-      <Route path="/hospitaldashboard" element={<HospitalDashboard />}/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/donorsignup" element={<DonorSignup />} />
+          <Route path="/setprofile" element={<SetProfile />} />
+          <Route path="/donordashboard" element={<DonorDashboard />} />
+          <Route path="/hospitalsignup" element={<HospitalSignup />} />
+          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
 
-    </Routes>
+        </Routes>
 
-   </Router>
+      </Router>
     </>
   )
 }

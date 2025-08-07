@@ -1,5 +1,3 @@
-import React from 'react'
-
 const selectinput = ({ label, options, defaultValue }) => {
   return (
     <div className="flex flex-col">

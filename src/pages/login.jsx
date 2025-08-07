@@ -1,14 +1,10 @@
-import React from 'react'
 import Footers from '../components/footers'
 import Navbar from '../components/navbar'
 import Loginform from '../components/loginform'
 import LeftSide from '../components/leftside.jsx'
 import photo from '../photos/photo2.png'
 
-
-
-
-const login = () => {
+const Login = () => {
   return (
     <>
     
@@ -22,4 +18,4 @@ const login = () => {
   )
 }
 
-export default login
+export default Login

@@ -1,6 +1,4 @@
-import React from 'react'
-
-const footers = () => {
+const Footers = () => {
   return (
     
       <div><footer className="mt-8 p-4 text-center text-[#1AB6CA] text-sm bg-[#DBEDF0]">
@@ -10,4 +8,4 @@ const footers = () => {
   )
 }
 
-export default footers
+export default Footers

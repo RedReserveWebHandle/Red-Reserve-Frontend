@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar2 from '../components/navbar2.jsx'
 import Footers from '../components/footers.jsx'
 import Profilecard from '../components/profilecard.jsx'
@@ -6,7 +5,7 @@ import Dashboardleft from '../components/dashboardleft.jsx'
 
 
 
-const donordashboard = () => {
+const Donordashboard = () => {
   return (
     <>
     <Navbar2 />
@@ -19,4 +18,4 @@ const donordashboard = () => {
   )
 }
 
-export default donordashboard
+export default Donordashboard

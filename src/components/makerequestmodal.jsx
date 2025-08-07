@@ -1,12 +1,11 @@
-import React,{useState} from 'react'
+import {useState} from 'react'
 
-
-const makerequestmodal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
+const MakeRequestModal = ({ isOpen, onClose }) => {
   const [requiredBloodType, setRequiredBloodType] = useState('A+');
   const [unitsRequired, setUnitsRequired] = useState('');
   const [eligibleBloodTypes, setEligibleBloodTypes] = useState('');
+
+  if (!isOpen) return null;
 
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -105,4 +104,4 @@ const makerequestmodal = ({ isOpen, onClose }) => {
   )
 }
 
-export default makerequestmodal;
+export default MakeRequestModal;

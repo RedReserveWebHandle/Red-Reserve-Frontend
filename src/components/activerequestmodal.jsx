@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-
-const activerequestmodal = ({ isOpen, onClose, requestData }) => {
+const Activerequestmodal = ({ isOpen, onClose, requestData }) => {
   if (!isOpen) return null;
 
   // Provide default requestData if not passed or is null/undefined
@@ -9,6 +7,7 @@ const activerequestmodal = ({ isOpen, onClose, requestData }) => {
     units: 0,
     responses: [],
   };
+  
   const currentRequestData = requestData || defaultRequestData;
 
   return (
@@ -80,7 +79,7 @@ const activerequestmodal = ({ isOpen, onClose, requestData }) => {
   )
 }
 
-export default activerequestmodal
+export default Activerequestmodal
 
 
 

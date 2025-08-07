@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DonorAcceptModal from './donoracceptmodal.jsx'; // Capitalized the file name
 
 const DashboardLeft = () => { // Capitalized component name
