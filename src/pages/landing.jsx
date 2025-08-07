@@ -26,7 +26,7 @@ const Landing = () => {
                 Login
               </button>
             </Link>
-            <Link to="/signup" className="rounded-lg bg-[#1AB6CA] px-4 py-2 font-semibold text-white transition duration-300 hover:bg-teal-600 ">
+            <Link to="/donorsignup" className="rounded-lg bg-[#1AB6CA] px-4 py-2 font-semibold text-white transition duration-300 hover:bg-teal-600 ">
               <button>
                 Sign Up
               </button>

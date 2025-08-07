@@ -1,4 +1,3 @@
-
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import Landing from './pages/landing.jsx'
@@ -21,9 +20,7 @@ function App() {
           <Route path="/donordashboard" element={<DonorDashboard />} />
           <Route path="/hospitalsignup" element={<HospitalSignup />} />
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
-
         </Routes>
-
       </Router>
     </>
   )

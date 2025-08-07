@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom'
 
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  window.location.href = '/';
+};
+
 const Navbar2 = () => {
   return (
     <nav className="bg-[#DBEDF0] p-6">
@@ -16,7 +21,7 @@ const Navbar2 = () => {
 
         {/* Buttons */}
         <Link to="/" className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-semibold  transition-colors hover:border hover:border-[#1ab6ca]">
-          <button>
+          <button onClick={handleLogout}>
             Log Out
           </button>
         </Link>
