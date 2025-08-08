@@ -1,18 +1,8 @@
 import {useState} from 'react'
 import HospitalRequestModal from './hospitalrequestmodal.jsx'
 
-const Hospitalrequestcard = ({ hospitalName, units, date }) => {
+const Hospitalrequestcard = ({ hospitalName, units, date, requestData }) => {
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
-  
-  const sampleHospitalData = {
-    name: 'HOSPITAL NAME',
-    requiredBloodType: 'B+',
-    eligibleBloodTypes: ['B+', 'O', 'A-'],
-    pincode: '400074',
-    address: '123 Hospital Road, City, State',
-    unitsRequired: 20,
-  };
-
   const openHospitalModal = () => setIsHospitalModalOpen(true);
   const closeHospitalModal = () => setIsHospitalModalOpen(false);
   return (
@@ -43,7 +33,7 @@ const Hospitalrequestcard = ({ hospitalName, units, date }) => {
         <HospitalRequestModal
         isOpen={isHospitalModalOpen}
         onClose={closeHospitalModal}
-        hospitalData={sampleHospitalData}
+        hospitalData={requestData}
       />
     </div>
   )

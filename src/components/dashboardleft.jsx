@@ -5,6 +5,7 @@ import { BACKEND_URL } from '../config.js'; // Ensure this points to your API ba
 const DashboardLeft = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [matchingRequests, setMatchingRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [cooldownDate, setCooldownDate] = useState('');
   const [lastDonation, setLastDonation] = useState(null);
 
@@ -13,7 +14,7 @@ const DashboardLeft = () => {
     if (!token) return;
 
     try {
-      const res = await fetch(`${BACKEND_URL}/requests`, {
+      const res = await fetch(`${BACKEND_URL}/donor/requests`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,8 +37,8 @@ const DashboardLeft = () => {
 
     try {
       const [cooldownRes, donationRes] = await Promise.all([
-        fetch(`${BACKEND_URL}/cooldown`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`${BACKEND_URL}/lastdonation`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${BACKEND_URL}/donor/cooldown`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${BACKEND_URL}/donor/lastdonation`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       if (cooldownRes.ok) {
@@ -47,7 +48,8 @@ const DashboardLeft = () => {
 
       if (donationRes.ok) {
         const ld = await donationRes.json();
-        setLastDonation(ld.lastdonation?.slice(0, 10));
+        console.log("Last Donation Data:", ld);
+        setLastDonation(ld);
       }
     } catch (err) {
       console.error('Error:', err);
@@ -59,18 +61,15 @@ const DashboardLeft = () => {
     fetchCooldownAndDonation();
   }, []);
 
-  const sampleData = {
-    requiredBloodType: 'B+',
-    eligibleBloodTypes: ['B+', 'O', 'A-'],
-    pincode: '400074',
-    address: '123 Hospital Road, City, State',
-    unitsRequired: 20,
-    DonationTimings: '10AM-5PM'
-  };
-
-  const openModal = () => setModalOpen(true);
+  const openModal = (request) => {
+  setSelectedRequest(request);
+  setModalOpen(true);
+};
   const closeModal = () => setModalOpen(false);
 
+  if(!lastDonation){
+    return null;
+  }
   return (
     <>
       <div className="bg-white rounded-3xl  p-8 max-w-2xl w-full mx-auto my-10">
@@ -97,9 +96,9 @@ const DashboardLeft = () => {
         </div>
 
         {/* Last Donation Section */}
-        <h2 className="text-2xl font-bold text-blue-900 mb-4"><span>{lastDonation || 'No donation record'}</span></h2>
+        <h2 className="text-2xl font-bold text-blue-900 mb-4"><span>Last Donation</span></h2>
         <div className="bg-[#dbedf0] rounded-xl p-4 flex items-center justify-between mb-8 shadow-md">
-          <span className="text-[#1ab6ca] font-semibold">Apollo Hospitals</span>
+          <span className="text-[#1ab6ca] font-semibold">{lastDonation ? lastDonation.hospital : 'Unknown Hospital'}</span>
           <div className="flex items-center space-x-2 text-[#1ab6ca]">
             {/* Calendar icon */}
             <svg
@@ -114,7 +113,7 @@ const DashboardLeft = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <span>01-08-2025</span>
+            <span>{lastDonation.lastdonation?.slice(0, 10)}</span>
           </div>
         </div>
 
@@ -125,11 +124,12 @@ const DashboardLeft = () => {
           {matchingRequests.map((req, idx) => (
             <RequestCard
               key={idx}
+              id={req._id}
               bloodGroup={req.requiredbloodtype}
               hospital={req.hospitalname}
               eligible={req.eligiblebloodtypes.join(', ')}
               units={`${req.unitsrequired} units`}
-              openModal={openModal}
+              onClick={() => openModal(req)}
             />
           ))}
         </div>
@@ -157,21 +157,21 @@ const DashboardLeft = () => {
       <DonorAcceptModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        Data={sampleData}
+        data={selectedRequest}
       />
     </>
   );
 };
 
 // Reusable RequestCard component
-const RequestCard = ({ bloodGroup, hospital, eligible, units, openModal }) => { // openModal is now a prop
+const RequestCard = ({ bloodGroup, hospital, eligible, units, onClick  }) => { // openModal is now a prop
   return (
     <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex flex-col items-center text-center">
       <h3 className="text-3xl font-bold text-blue-900 mb-2">{bloodGroup}</h3>
       <p className="text-gray-700 font-semibold mb-1">{hospital}</p>
       <p className="text-teal-600 text-sm mb-2">Eligible: {eligible}</p>
       <p className="text-gray-600 text-sm mb-4">{units}</p>
-      <button onClick={openModal} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+      <button onClick={onClick} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
         Contact
       </button>
     </div>

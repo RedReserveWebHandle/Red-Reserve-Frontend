@@ -39,8 +39,9 @@ const ProfileCard = () => {
         });
 
         const data = await res.json();
-        if (res.ok && data) {
+        if (res.ok && data && Object.keys(data).length > 0) {
           setProfile(data);
+          console.log("Profile Data:", data);
         } else {
           navigate('/setprofile'); // redirect if no profile
         }
