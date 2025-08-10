@@ -5,6 +5,7 @@ import HospitalRequestCard from '../components/hospitalrequestcard.jsx'
 import PastRequestCard from '../components/pastrequestcard.jsx'
 import Footers from '../components/footers.jsx'
 import MakeRequestModal from '../components/makerequestmodal.jsx'
+import Map from '../components/map.jsx'
 
 
 const hospitaldashboard = () => {
@@ -103,7 +104,7 @@ const hospitaldashboard = () => {
     </div>
     <Footers />
     <MakeRequestModal isOpen={isModalOpen} onClose={closeModal} />
-   
+   <Map />
     </>
   )
 }
