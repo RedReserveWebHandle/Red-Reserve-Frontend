@@ -14,12 +14,13 @@ const Map = () => {
     <>
     
       <div className="flex flex-row gap-16 p-8 items-center justify-center">
-        
-      <MapContainer
+      
+      <MapContainer 
         center={[51.505, -0.09]}
         zoom={13}
         scrollWheelZoom={false}
-        style={{ height: "600px", width: "60%" }}
+        className="rounded-xl border-6 border-[#1ab6ca]"
+        style={{ height: "500px", width: "60%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -27,10 +28,12 @@ const Map = () => {
         />
         <Marker position={[51.505, -0.09]}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            Location
           </Popup>
         </Marker>
       </MapContainer>
+      
+      
       <div>
         <div className=" p-4">
         <h2 className="text-3xl  font-sans font-bold text-blue-900">
