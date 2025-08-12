@@ -15,8 +15,7 @@ const donordashboard = () => {
     <Dashboardleft />
     <Profilecard />
     </div>
-    <br />
-    <br />
+    
     <Map />
     <Footers />
     </>

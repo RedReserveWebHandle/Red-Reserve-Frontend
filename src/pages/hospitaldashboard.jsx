@@ -102,9 +102,10 @@ const hospitaldashboard = () => {
         <PastRequestCard units="20 Units B+" date="01-08-2025" />
       </div>
     </div>
+    <Map />
     <Footers />
     <MakeRequestModal isOpen={isModalOpen} onClose={closeModal} />
-   <Map />
+   
     </>
   )
 }
