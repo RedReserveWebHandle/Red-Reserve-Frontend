@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar2 from '../components/navbar2.jsx'
 import Footers from '../components/footers.jsx'
 import Profilecard from '../components/profilecard.jsx'
@@ -7,7 +6,7 @@ import Map from '../components/map.jsx'
 
 
 
-const donordashboard = () => {
+const Donordashboard = () => {
   return (
     <>
     <Navbar2 />
@@ -15,11 +14,10 @@ const donordashboard = () => {
     <Dashboardleft />
     <Profilecard />
     </div>
-    
     <Map />
     <Footers />
     </>
   )
 }
 
-export default donordashboard
+export default Donordashboard

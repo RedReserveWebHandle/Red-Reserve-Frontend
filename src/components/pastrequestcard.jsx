@@ -1,6 +1,4 @@
-import React from 'react'
-
-const pastrequestcard = ({ units, date }) => {
+const Pastrequestcard = ({ units, date }) => {
   return (
     <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex items-center justify-between">
       <p className="text-gray-700 font-semibold">{units}</p>
@@ -24,4 +22,4 @@ const pastrequestcard = ({ units, date }) => {
   )
 }
 
-export default pastrequestcard
+export default Pastrequestcard

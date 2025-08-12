@@ -1,23 +1,75 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DonorAcceptModal from './donoracceptmodal.jsx'; // Capitalized the file name
+import { BACKEND_URL } from '../config.js'; // Ensure this points to your API base
 
-const DashboardLeft = () => { // Capitalized component name
+const DashboardLeft = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [matchingRequests, setMatchingRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [cooldownDate, setCooldownDate] = useState('');
+  const [lastDonation, setLastDonation] = useState(null);
 
-  const sampleData = {
-    requiredBloodType: 'B+',
-    eligibleBloodTypes: ['B+', 'O', 'A-'],
-    pincode: '400074',
-    address: '123 Hospital Road, City, State',
-    unitsRequired: 20,
-    DonationTimings: '10AM-5PM'
+  const fetchMatchingRequests = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/donor/requests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setMatchingRequests(data);
+      } else {
+        console.error('Error fetching requests');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const openModal = () => setModalOpen(true);
+  const fetchCooldownAndDonation = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const [cooldownRes, donationRes] = await Promise.all([
+        fetch(`${BACKEND_URL}/donor/cooldown`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${BACKEND_URL}/donor/lastdonation`, { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+
+      if (cooldownRes.ok) {
+        const cd = await cooldownRes.json();
+        setCooldownDate(cd.cooldown?.slice(0, 10)); // Format to YYYY-MM-DD
+      }
+
+      if (donationRes.ok) {
+        const ld = await donationRes.json();
+        console.log("Last Donation Data:", ld);
+        setLastDonation(ld);
+      }
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchMatchingRequests();
+    fetchCooldownAndDonation();
+  }, []);
+
+  const openModal = (request) => {
+  setSelectedRequest(request);
+  setModalOpen(true);
+};
   const closeModal = () => setModalOpen(false);
 
-  const cooldownDate = "01-10-2025"; // Example date
-
+  if(!lastDonation){
+    return null;
+  }
   return (
     <>
       <div className="bg-white rounded-3xl  p-8 max-w-2xl w-full mx-auto my-10">
@@ -32,7 +84,7 @@ const DashboardLeft = () => { // Capitalized component name
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-6 h-6 text-[#1ab6ca]"
+            className="w-6 h-6 text-white"
           >
             <path
               fillRule="evenodd"
@@ -40,13 +92,13 @@ const DashboardLeft = () => { // Capitalized component name
               clipRule="evenodd"
             />
           </svg>
-          <p className="font-semibold">You are in cooldown period till <span className="font-bold">[{cooldownDate}]</span></p>
+          {cooldownDate ? <p className="font-semibold">You are in cooldown period till <span className="font-bold">[{cooldownDate}]</span></p> : <p className="font-semibold">You are eligible to donate!</p>}
         </div>
 
         {/* Last Donation Section */}
-        <h2 className="text-2xl font-bold text-blue-900 mb-4">Last Donation</h2>
+        <h2 className="text-2xl font-bold text-blue-900 mb-4"><span>Last Donation</span></h2>
         <div className="bg-[#dbedf0] rounded-xl p-4 flex items-center justify-between mb-8 shadow-md">
-          <span className="text-[#1ab6ca] font-semibold">Apollo Hospitals</span>
+          <span className="text-[#1ab6ca] font-semibold">{lastDonation ? lastDonation.hospital : 'Unknown Hospital'}</span>
           <div className="flex items-center space-x-2 text-[#1ab6ca]">
             {/* Calendar icon */}
             <svg
@@ -61,19 +113,25 @@ const DashboardLeft = () => { // Capitalized component name
                 clipRule="evenodd"
               />
             </svg>
-            <span>01-08-2025</span>
+            <span>{lastDonation.lastdonation?.slice(0, 10)}</span>
           </div>
         </div>
 
         {/* Matching Nearby Requests Section */}
         <h2 className="text-2xl font-bold text-blue-900 mb-4">Matching Nearby Requests</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Request Card 1 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
-          {/* Request Card 2 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
-          {/* Request Card 3 */}
-          <RequestCard bloodGroup="B+" hospital="Apollo Hospitals" eligible="B+, AB+, O" units="2 units" openModal={openModal} />
+          {/* Matching Requests */}
+          {matchingRequests.map((req, idx) => (
+            <RequestCard
+              key={idx}
+              id={req._id}
+              bloodGroup={req.requiredbloodtype}
+              hospital={req.hospitalname}
+              eligible={req.eligiblebloodtypes.join(', ')}
+              units={`${req.unitsrequired} units`}
+              onClick={() => openModal(req)}
+            />
+          ))}
         </div>
 
         {/* More Button */}
@@ -99,21 +157,21 @@ const DashboardLeft = () => { // Capitalized component name
       <DonorAcceptModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        Data={sampleData}
+        data={selectedRequest}
       />
     </>
   );
 };
 
 // Reusable RequestCard component
-const RequestCard = ({ bloodGroup, hospital, eligible, units, openModal }) => { // openModal is now a prop
+const RequestCard = ({ bloodGroup, hospital, eligible, units, onClick  }) => { // openModal is now a prop
   return (
     <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex flex-col items-center text-center">
       <h3 className="text-3xl font-bold text-blue-900 mb-2">{bloodGroup}</h3>
       <p className="text-gray-700 font-semibold mb-1">{hospital}</p>
       <p className="text-teal-600 text-sm mb-2">Eligible: {eligible}</p>
       <p className="text-gray-600 text-sm mb-4">{units}</p>
-      <button onClick={openModal} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+      <button onClick={onClick} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
         Contact
       </button>
     </div>

@@ -1,11 +1,10 @@
-import React from 'react'
 import Footers from '../components/footers.jsx'
 import Navbar2 from '../components/navbar2.jsx'
 import Hospitalform from '../components/hospitalform.jsx'
 import photo from '../photos/photo4.png'
 import LeftSide from '../components/leftside.jsx'
 
-const hospitalsignup = () => {
+const Hospitalsignup = () => {
   return (
     <>
     <Navbar2 />
@@ -18,4 +17,4 @@ const hospitalsignup = () => {
   )
 }
 
-export default hospitalsignup
+export default Hospitalsignup

@@ -1,26 +1,58 @@
-import React from 'react'
-import { useState } from 'react';
-import ActiveRequestModal from './activerequestmodal.jsx'
+import { useState, useEffect } from 'react';
+import ActiveRequestModal from './activerequestmodal.jsx';
+import { BACKEND_URL } from '../config.js';
 
-
-const requestcard = ({ bloodGroup, units, date }) => {
+const RequestCard = ({ bloodGroup, units, date, id }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [responses, setResponses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  useEffect(() => {
+    const fetchResponses = async () => {
+      if (!isModalOpen) return;
+      setLoading(true);
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/hospital/responses`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setResponses(data);
+        } else {
+          console.error("Error fetching responses:", data.message);
+        }
+      } catch (err) {
+        console.error("Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResponses();
+  }, [isModalOpen, id, token]);
 
   return (
     <div className="bg-[#dbedf0] rounded-xl p-4 shadow-md flex flex-col items-start text-left">
       <h3 className="text-3xl font-bold text-blue-900 mb-1">{bloodGroup}</h3>
-      <p className="text-gray-700 font-semibold mb-2">{units}</p>
+      <p className="text-gray-700 font-semibold mb-2">{units} Units</p>
       <div className="flex items-center space-x-2 text-[#1ab6ca] text-sm mb-4">
         {/* Calendar icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
           className="w-4 h-4"
+          fill="currentColor"
+          viewBox="0 0 24 24"
         >
           <path
             fillRule="evenodd"
@@ -30,13 +62,27 @@ const requestcard = ({ bloodGroup, units, date }) => {
         </svg>
         <span>{date}</span>
       </div>
-      <button onClick={openModal} className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out self-end">
+
+      <button
+        onClick={openModal}
+        className="bg-[#1ab6ca] hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out self-end"
+      >
         Details
       </button>
-      <ActiveRequestModal isOpen={isModalOpen} onClose={closeModal} />
-      
-    </div>
-  )
-}
 
-export default requestcard
+      <ActiveRequestModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        requestData={{
+          id: id,
+          bloodType: bloodGroup,
+          units: units,
+          responses: responses,
+          loading: loading
+        }}
+      />
+    </div>
+  );
+};
+
+export default RequestCard;
