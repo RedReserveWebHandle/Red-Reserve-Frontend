@@ -1,11 +1,13 @@
 import photo from '../photos/photo1.jpg'
 import Footers from '../components/footers'
 import { Link } from 'react-router-dom'
+import TestRoutes from '../components/test'
 
 
 const Landing = () => {
   return (
     <>
+    <TestRoutes/>
       {/* Navbar Section */}
       <nav className="bg-[#DBEDF0] p-6">
         <div className="container mx-auto flex items-center justify-between">
