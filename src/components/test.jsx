@@ -7,8 +7,8 @@ export default function TestRoutes() {
 
     const testEndpoints = [
       `${backendBase}/test`,
-      `${backendBase}/api/donor/test`,
-      `${backendBase}/api/hospital/test`,
+      `${backendBase}/donor/test`,
+      `${backendBase}/hospital/test`,
     ];
 
     testEndpoints.forEach(async (url) => {
