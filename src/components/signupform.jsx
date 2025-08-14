@@ -14,6 +14,7 @@ const SignupForm = () => {
     try {
       const res = await fetch(`${BACKEND_URL}/donor/signup`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
