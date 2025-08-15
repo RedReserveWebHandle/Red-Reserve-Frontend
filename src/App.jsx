@@ -7,6 +7,7 @@ import SetProfile from './pages/setprofile.jsx'
 import DonorDashboard from './pages/donordashboard.jsx'
 import HospitalSignup from './pages/hospitalsignup.jsx'
 import HospitalDashboard from './pages/hospitaldashboard.jsx'
+import More from './pages/More.jsx'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/donordashboard" element={<DonorDashboard />} />
           <Route path="/hospitalsignup" element={<HospitalSignup />} />
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
+          <Route path='/more' element={<More />} />
         </Routes>
       </Router>
     </>

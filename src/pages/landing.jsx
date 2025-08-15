@@ -1,13 +1,11 @@
 import photo from '../photos/photo1.jpg'
 import Footers from '../components/footers'
 import { Link } from 'react-router-dom'
-import TestRoutes from '../components/test'
 
 
 const Landing = () => {
   return (
     <>
-    <TestRoutes/>
       {/* Navbar Section */}
       <nav className="bg-[#DBEDF0] p-6">
         <div className="container mx-auto flex items-center justify-between">
@@ -67,9 +65,10 @@ const Landing = () => {
 
               </button>
             </Link>
+            <Link to="/more">
             <button className="rounded-lg border border-[#1AB6CA] px-6 py-3 text-[#1AB6CA] transition duration-300 hover:bg-[#1AB6CA] hover:text-white shadow-md hover:font-semibold">
               Know More
-            </button>
+            </button></Link>
           </div>
           <blockquote className="text-gray-400 italic border-l-4 border-[#1ab6ca] pl-4">
             <p className="mb-2 text-lg">"We were minutes away from losing her. Then a donor saved her life..."</p>
